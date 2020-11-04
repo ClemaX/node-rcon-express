@@ -1,0 +1,33 @@
+{
+  "name": "rcon-rest",
+  "version": "1.0.0",
+  "description": "A REST-API to interface with Minecraft RCON",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ClemaX/rcon-rest.git"
+  },
+  "keywords": [
+    "Minecraft",
+    "RCON",
+    "REST",
+    "API"
+  ],
+  "author": "ClemaX",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ClemaX/rcon-rest/issues"
+  },
+  "homepage": "https://github.com/ClemaX/rcon-rest#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "lowdb": "^1.0.0"
+  }
+}
