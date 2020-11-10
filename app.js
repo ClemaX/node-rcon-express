@@ -1,29 +1,29 @@
-const config = require('./config.json')
+const config = require("./config.json");
 
 // Directory paths
-const path = require('path');
+const path = require("path");
 
 // Crypto
-const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 // HTTP Router
-const express = require('express');
-const exphbs = require('express-handlebars');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const express = require("express");
+const exphbs = require("express-handlebars");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
 const app = express();
 
 // Database
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync')
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
 const adapter = new FileSync(config.auth.databaseFile);
 const db = low(adapter);
 
 // RCON
-const RCON = require('./node-rcon/RCON');
+const RCON = require("./node-rcon/RCON");
 
 const serverConnections = [[{}]];
 
@@ -46,7 +46,7 @@ const connectServer = (serverConfig) => {
 				if (!serverConnections[host]) {
 					serverConnections[host] = [];
 				}
-				serverConnections[host][port] = {rcon: rcon, log: ['Connected to the server!']};
+				serverConnections[host][port] = {rcon: rcon, log: ["Connected to the server!"]};
 				resolve(serverConnections[host][port]);
 			}).catch((error) => {
 				reject(`Could not connect to ${host}:${port}: ${error}`);
@@ -86,16 +86,16 @@ db.defaults({
 
 // Serve static files
 if (config.serveStatic) {
-	app.use('/static', express.static(path.join(__dirname, 'public')));
+	app.use("/static", express.static(path.join(__dirname, "public")));
 }
 
 // Use Handlebars
-app.engine('hbs', exphbs({ extname: '.hbs' }));
+app.engine("hbs", exphbs({ extname: ".hbs" }));
 
-app.set('view engine', 'hbs');
+app.set("view engine", "hbs");
 
 // Support URL-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Parse HTTP Cookies
 app.use(cookieParser());
@@ -103,7 +103,7 @@ app.use(cookieParser());
 // Authentication
 app.use((req, res, next) => {
 	// Get auth token from the cookies
-	const authToken = req.cookies['AuthToken'];
+	const authToken = req.cookies["AuthToken"];
 
 	// Inject the user to the request
 	req.authToken = authToken;
@@ -119,9 +119,9 @@ const requireAuth = (req, res, next) => {
 	if (req.user) {
 		next();
 	} else {
-		res.redirect('/login');
+		res.redirect("/login");
 	}
-}
+};
 
 const requireServer = (req, res, next) => {
 	if (!req.user.servers[0]) {
@@ -136,43 +136,43 @@ const requireServer = (req, res, next) => {
 			res.status(500).json("Internal Server Error");
 		});
 	}
-}
+};
 
 const generateAuthToken = () => {
-	return crypto.randomBytes(config.auth.tokenSize).toString('hex');
-}
+	return crypto.randomBytes(config.auth.tokenSize).toString("hex");
+};
 
 // Root route
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
 	if (req.user) {
-		res.redirect('/dashboard');
+		res.redirect("/dashboard");
 	} else {
-		res.redirect('/login');
+		res.redirect("/login");
 	}
 });
 
 // Login route
-app.get('/login', (req, res) => {
+app.get("/login", (req, res) => {
 	if (req.user) {
-		res.redirect('/dashboard');
+		res.redirect("/dashboard");
 	}
 	else {
-		res.render('login', { css: ['login.css'] });
+		res.render("login", { css: ["login.css"] });
 	}
 });
 
-app.post('/login', (req, res) => {
+app.post("/login", (req, res) => {
 	const { username, password } = req.body;
 
 	// Find user in the database
-	const user = db.get('users')
+	const user = db.get("users")
 		.find({ username: username })
 		.value();
 
 	if (!user) {
-		res.render('login', {
-			css: ['login.css'],
-			message: 'Invalid username or password'
+		res.render("login", {
+			css: ["login.css"],
+			message: "Invalid username or password"
 		});
 	} else {
 		// Generate authentication token
@@ -185,12 +185,12 @@ app.post('/login', (req, res) => {
 		bcrypt.compare(password, user.password)
 			.then((result) => {
 				if (result){
-					res.cookie('AuthToken', authToken);
-					res.redirect('/dashboard');
+					res.cookie("AuthToken", authToken);
+					res.redirect("/dashboard");
 				} else {
-					res.render('login', {
-						css: ['login.css'],
-						message: 'Invalid username or password'
+					res.render("login", {
+						css: ["login.css"],
+						message: "Invalid username or password"
 					});
 				}
 			})
@@ -212,12 +212,12 @@ app.post("/logout", requireAuth, (req, res, next) => {
 });
 
 // Dashboard route
-app.get('/dashboard', requireAuth, requireServer, (req, res, next) => {
+app.get("/dashboard", requireAuth, requireServer, (req, res, next) => {
 	connectServer(req.user.servers[0]).then((server) => {
-		res.render('dashboard', {css: ['dashboard.css'], js: ['console.js'], log: server.log});
+		res.render("dashboard", {css: ["dashboard.css"], js: ["console.js"], log: server.log});
 	}).catch((error) => {
 		console.error(error);
-		res.render('dashboard', {css: ['dashboard.css'], log: ["Error: Could not connect to server!"]});
+		res.render("dashboard", {css: ["dashboard.css"], log: ["Error: Could not connect to server!"]});
 	});
 });
 
