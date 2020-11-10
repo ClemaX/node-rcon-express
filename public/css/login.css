@@ -15,17 +15,17 @@ body {
 
 @media only screen and (min-width: 1000px) {
 	.login-container {
-			width: 30%;
-			height: 30%;
-			min-height: 270px;
+		width: 30%;
+		height: 30%;
+		min-height: 270px;
 	}
 }
 
 @media only screen and (max-width: 1000px) {
 	.login-container {
-			width: 30%;
-			height: 60%;
-			min-height: 350px;
+		width: 30%;
+		height: 60%;
+		min-height: 350px;
 	}
 }
 
