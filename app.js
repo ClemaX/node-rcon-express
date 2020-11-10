@@ -63,7 +63,9 @@ db.defaults({
 }).write();
 
 // Serve static files
-app.use('/static', express.static(path.join(__dirname, 'public')));
+if (config.serveStatic) {
+	app.use('/static', express.static(path.join(__dirname, 'public')));
+}
 
 // Use Handlebars
 app.engine('hbs', exphbs({ extname: '.hbs' }));

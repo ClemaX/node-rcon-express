@@ -1,5 +1,6 @@
 {
 	"listenPort": 3000,
+	"serveStatic": false,
 	"defaultUser":
 	{
 		"username": "admin",
