@@ -1,0 +1,41 @@
+body {
+	/** Server page */
+	--title-background-color: rgb(255, 255, 255);
+	--title-h1-color: rgb(182, 221, 156);
+	--title-h4-color: rgb(159, 167, 157);
+
+	--server-background-color: rgb(96, 206, 96);
+	--server-h1-color: rgb(47, 49, 46);
+	--server-ip-color: rgb(242, 255, 235);
+	--server-h4-color: rgb(231, 231, 231);
+
+	--server-action-btn-reload: rgb(212, 238, 195);
+	--server-action-btn-reload-hover: rgb(224, 241, 212);
+	--server-action-btn-restart: rgb(240, 231, 182);
+	--server-action-btn-restart-hover:rgb(243, 238, 209);
+	--server-action-btn-stop: rgb(233, 173, 173);
+	--server-action-btn-stop-hover: rgb(241, 216, 216);
+	--server-action-btn-text: rgb(3, 3, 3);
+
+	/** Login page */
+	--login-h1-color: rgb(99, 104, 90);
+	--login-h4-color: rgb(216, 163, 103);
+	--login-submit-color: rgb(143, 241, 52);
+	--login-submit-hover-color: rgb(253, 152, 69);
+	--login-err-color: rgb(255, 81, 0);
+
+	/** colors */
+	--white: rgb(255, 255, 255);
+	--white2: rgb(247, 247, 247);
+	--shadow-color: rgba(1, 1, 1, 0.514);
+
+	--login-container-color: var(--white);
+	--login-label-color: rgb(216, 163, 103);
+	--login-submit-btn-color: rgb(166, 240, 132);
+	--login-submit-btn-shadow-color: rgb(140, 218, 104);
+	--login-submit-btn-hover-color: rgb(243, 146, 102);
+	--login-submit-btn-shadow-hover-color: rgb(224, 128, 84);
+	--login-submit-text-color: rgb(255, 255, 255);
+	--login-h1-color: rgb(99, 104, 90);
+	--login-err-color: rgb(255, 81, 0);
+}

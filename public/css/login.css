@@ -7,15 +7,8 @@ body {
 	width: 100vw;
 	height: 100vh;
 
-	--login-container-color: rgb(255, 255, 255);
-	--login-h1-color: rgb(99, 104, 90);
-	--login-h4-color: rgb(216, 163, 103);
-	--login-submit-color: rgb(143, 241, 52);
-	--login-submit-hover-color: rgb(253, 152, 69);
-	--login-err-color: rgb(255, 81, 0);
-
 	/*background-color: rgb(77, 179, 238);*/
-	background-image: url("../assets/bg.png");
+	background-image: url("/static/img/bg.png");
 
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -24,6 +17,7 @@ body {
 	.login-container {
 			width: 30%;
 			height: 30%;
+			min-height: 270px;
 	}
 }
 
@@ -31,6 +25,7 @@ body {
 	.login-container {
 			width: 30%;
 			height: 60%;
+			min-height: 350px;
 	}
 }
 
@@ -38,17 +33,11 @@ body {
 	color: var(--login-h1-color);
 }
 
-.login-container h4 {
-	color: var(--login-h4-color);
+.login-container label {
+	color: var(--login-label-color);
 	font-size: 14px;
 	margin-bottom: 0px;;
 }
-
-/*
-on invalid {
-	display: block;;
-}
-*/
 
 .login-container h5 {
 	display: none;
@@ -61,19 +50,36 @@ on invalid {
 	width: 100%;
 }
 
-.login-container a:hover {
-	color: var(--login-submit-hover-color);
+.login-container input[type="submit"]:hover {
+	background-color: var(--login-submit-btn-hover-color);
+	border-color: var(--login-submit-btn-hover-color);
+	-webkit-box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-hover-color);
+	-moz-box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-hover-color);
+	box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-hover-color);
+
+	transition: 0.2s ease-in;
 }
 
-.login-container a {
+.login-container input[type="submit"] {
 	font-size: large;
+	font-weight: bold;
 	text-decoration: none;
-	color: var(--login-submit-color);
+
+	background-color: var(--login-submit-btn-color);
+	border: 5px solid var(--login-submit-btn-color);
+	-webkit-box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-color);
+	-moz-box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-color);
+	box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-color);
+	border-radius: 5px;;
+	color: var(--login-submit-text-color);
+
 	content: "Submit";
+	text-align: center;
 	float: right;
-	width: 20%;
-	height:9%;
+	width: 85px;
+	height: 30px;
 	margin: 50px 0;
+	transition: 0.3s ease-in;
 }
 
 .login-container
@@ -83,8 +89,8 @@ on invalid {
 	background-color: var(--login-container-color);
 	border: 35px solid var(--login-container-color);
 	border-radius: 25px;;
-	-moz-box-shadow: 0px 10px 40px 0px #000000;
-	-webkit-box-shadow: 0px 10px 40px 0px #000000;
-	-o-box-shadow: 0px 10px 40px 0px #000000;
-	box-shadow: 0px 10px 40px 0px #000000;
+	-moz-box-shadow: 0px 10px 40px 0px var(--shadow-color);
+	-webkit-box-shadow: 0px 10px 40px 0px var(--shadow-color);
+	-o-box-shadow: 0px 10px 40px 0px var(--shadow-color);
+	box-shadow: 0px 10px 40px 0px var(--shadow-color);
 }
