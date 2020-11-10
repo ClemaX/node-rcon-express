@@ -1,0 +1,108 @@
+body {
+	position: absolute;
+	top:0px;
+	left:0px;
+	margin:0 0;
+	padding:0 0;
+	width: 100vw;
+	height: 100vh;
+
+	background-color: rgb(77, 179, 238);
+
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/*
+**  Title container
+*/
+
+.title-container h1 {
+	font-size: 50px;
+	color: gainsboro;
+}
+
+.title-container {
+	position: absolute;
+
+	background-color: ghostwhite;
+	border: 50px solid ghostwhite;
+	border-radius: 100px;
+
+	width:75%;
+	height:250px;
+
+	margin-left:20px;
+	margin-top:15px;
+
+	transition: 0.3s ease-in-out;
+}
+
+.title-container:hover {
+	margin-left: 40px;
+}
+
+/*
+**  Console Container
+*/
+
+.console-container h1 {
+	font-size: 38px;
+	color:whitesmoke;
+}
+
+.console-container p {
+	font-size: 14px;
+	width: 90%;
+	margin-left: 5%;
+	height: 75%;
+	border: 9px solid rgb(27, 25, 32);
+	background-color: rgb(22, 19, 26);
+	color: whitesmoke;
+}
+
+#console-input {
+	display: flex;
+	flex-direction: row;
+	width: 90%;
+	margin-left: 5%;
+	margin-bottom: 50px;
+	margin-top:0px;
+	padding:7px;
+	background-color: rgb(27, 25, 32);
+}
+
+#console-input h5 {
+	margin: 0;
+	width: 20px;
+	color: whitesmoke;
+}
+
+#console-input input {
+	position: relative;
+	border: none;
+	background-color: rgb(22, 19, 26);
+	width:100%;
+	float:right;
+	color: whitesmoke;
+}
+
+
+.console-container {
+	position: absolute;
+
+	background-color: rgb(35, 33, 39);
+	border: 50px solid rgb(35, 33, 39);
+	border-radius: 100px;
+
+	width:75%;
+	height:500px;
+
+	margin-left: 15%;
+	top: 340px;
+
+	transition: 0.5s ease-in-out;
+}
+
+.console-container:hover {
+	margin-left: calc(15% - 25px);
+}

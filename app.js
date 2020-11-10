@@ -1,5 +1,8 @@
 const config = require('./config.json')
 
+// Directory paths
+const path = require('path');
+
 // Crypto
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
@@ -22,20 +25,29 @@ const db = low(adapter);
 // RCON
 const RCON = require('./node-rcon/RCON');
 
-const rcon = new RCON(config.RCON.timeout);
+const serverConnections = [[{}]];
 
-// Connect to RCON server
-rcon.connect(config.RCON.host, config.RCON.port, config.RCON.password)
-	.then(() => {
-		console.log(`Connected to RCON on ${config.RCON.host}:${config.RCON.port}`);
-		app.listen(config.listenPort, () => {
-			console.log(`Server running on port ${config.listenPort}!`);
-		});
-	})
-	.catch((error) => {
-		console.error(`Could not connect to ${config.RCON.host}:${config.RCON.port}: ${error}`);
-		process.exit(1);
+const connectServer = (serverConfig) => {
+	// Connect to RCON server
+	return new Promise((resolve, reject) => {
+		if (serverConnections[host][port]) {
+			console.log(`Recycling RCON on ${serverConfig.host}:${serverConfig.port}`);
+			resolve(serverConnections[host][port]);
+		} else {
+			const rcon = new RCON(config.RCON.timeout)
+			connection.connect(serverConfig.host, serverConfig.port, serverConfig.password)
+			.then(() => {
+				console.log(`Connected to RCON on ${serverConfig.host}:${serverConfig.port}`);
+				serverConnections[host][port] = {rcon: rcon, log: 'Connected to the server!'};
+				resolve(serverConnections[host][port]);
+			})
+			.catch((error) => {
+				console.error(`Could not connect to ${serverConfig.host}:${serverConfig.port}: ${error}`);
+				reject(error);
+			});
+		}
 	});
+};
 
 // Default user
 const hashedDefaultPassword
@@ -50,9 +62,11 @@ db.defaults({
 	]
 }).write();
 
-app.engine('hbs', exphbs({
-	extname: '.hbs'
-}));
+// Serve static files
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+// Use Handlebars
+app.engine('hbs', exphbs({ extname: '.hbs' }));
 
 app.set('view engine', 'hbs');
 
@@ -81,7 +95,7 @@ const requireAuth = (req, res, next) => {
 	if (req.user) {
 		next();
 	} else {
-		res.status(403).json("Unauthenticated");
+		res.redirect('/login');
 	}
 }
 
@@ -89,7 +103,26 @@ const generateAuthToken = () => {
 	return crypto.randomBytes(config.auth.tokenSize).toString('hex');
 }
 
-app.post("/login", (req, res) => {
+// Root route
+app.get('/', (req, res) => {
+	if (req.user) {
+		res.redirect('/dashboard');
+	} else {
+		res.redirect('/login');
+	}
+});
+
+// Login route
+app.get('/login', (req, res) => {
+	if (req.user) {
+		res.redirect('/dashboard');
+	}
+	else {
+		res.render('login', { css: ['login.css'] });
+	}
+});
+
+app.post('/login', (req, res) => {
 	const { username, password } = req.body;
 
 	// Find user in the database
@@ -98,7 +131,10 @@ app.post("/login", (req, res) => {
 		.value();
 
 	if (!user) {
-		res.json("Invalid credentials");
+		res.render('login', {
+			css: ['login.css'],
+			message: 'Invalid username or password'
+		});
 	} else {
 		// Generate authentication token
 		const authToken = generateAuthToken();
@@ -111,24 +147,34 @@ app.post("/login", (req, res) => {
 			.then((result) => {
 				if (result){
 					res.cookie('AuthToken', authToken);
-					res.json("Logged in successfully!");
+					res.redirect('/dashboard');
 				} else {
-					res.status(401).json("Invalid credentials");
+					res.render('login', {
+						css: ['login.css'],
+						message: 'Invalid username or password'
+					});
 				}
 			})
-			.catch((err) => {
-				console.error(err);
+			.catch(() => {
+				res.status(500).json("Internal Server Error");
 			});
 	}
 });
 
+// Logout route
 app.post("/logout", requireAuth, (req, res, next) => {
 	// Invalidate authentication token
 	delete authTokens[req.authToken];
 	res.json("Logged out successfully!")
 });
 
-app.post("/command", requireAuth, (req, res, next) => {
+// Dashboard route
+app.get('/dashboard', requireAuth, (req, res, next) => {
+	res.render('dashboard', {css: ['dashboard.css']});
+});
+
+// Command route
+app.post("/dashboard/command", requireAuth, (req, res, next) => {
 	const { command } = req.body;
 	if (command) {
 		console.log(`Executing RCON '${command}'...`);
@@ -143,4 +189,8 @@ app.post("/command", requireAuth, (req, res, next) => {
 	} else {
 		res.status(401).json("Invalid command!");
 	}
+});
+
+app.listen(config.listenPort, () => {
+	console.log(`Server running on port ${config.listenPort}!`);
 });

@@ -1,0 +1,90 @@
+body {
+	position: absolute;
+	top:0px;
+	left:0px;
+	margin:0 0;
+	padding:0 0;
+	width: 100vw;
+	height: 100vh;
+
+	--login-container-color: rgb(255, 255, 255);
+	--login-h1-color: rgb(99, 104, 90);
+	--login-h4-color: rgb(216, 163, 103);
+	--login-submit-color: rgb(143, 241, 52);
+	--login-submit-hover-color: rgb(253, 152, 69);
+	--login-err-color: rgb(255, 81, 0);
+
+	/*background-color: rgb(77, 179, 238);*/
+	background-image: url("../assets/bg.png");
+
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+@media only screen and (min-width: 1000px) {
+	.login-container {
+			width: 30%;
+			height: 30%;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.login-container {
+			width: 30%;
+			height: 60%;
+	}
+}
+
+.login-container h1 {
+	color: var(--login-h1-color);
+}
+
+.login-container h4 {
+	color: var(--login-h4-color);
+	font-size: 14px;
+	margin-bottom: 0px;;
+}
+
+/*
+on invalid {
+	display: block;;
+}
+*/
+
+.login-container h5 {
+	display: none;
+	color: var(--login-err-color);
+	font-size: 15px;
+	margin-top:30px;
+}
+
+.login-container input {
+	width: 100%;
+}
+
+.login-container a:hover {
+	color: var(--login-submit-hover-color);
+}
+
+.login-container a {
+	font-size: large;
+	text-decoration: none;
+	color: var(--login-submit-color);
+	content: "Submit";
+	float: right;
+	width: 20%;
+	height:9%;
+	margin: 50px 0;
+}
+
+.login-container
+{
+	margin: auto;
+	margin-top:15%;
+	background-color: var(--login-container-color);
+	border: 35px solid var(--login-container-color);
+	border-radius: 25px;;
+	-moz-box-shadow: 0px 10px 40px 0px #000000;
+	-webkit-box-shadow: 0px 10px 40px 0px #000000;
+	-o-box-shadow: 0px 10px 40px 0px #000000;
+	box-shadow: 0px 10px 40px 0px #000000;
+}

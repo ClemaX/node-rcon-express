@@ -1,16 +1,17 @@
 {
 	"listenPort": 3000,
-	"RCON":
-	{
-		"host": "localhost",
-		"port": 25575,
-		"password": "drowssap",
-		"timeout": 3000
-	},
 	"defaultUser":
 	{
 		"username": "admin",
-		"password": "drowssap"
+		"password": "drowssap",
+		"servers": [
+			{
+				"host": "localhost",
+				"port": 25575,
+				"password": "drowssap",
+				"timeout": 3000
+			}
+		]
 	},
 	"auth":
 	{

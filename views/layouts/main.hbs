@@ -5,6 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>Minecraft Web Server</title>
+		{{#each css}}
+        <link rel="stylesheet" href="/static/css/{{this}}">
+    {{/each}}
 	</head>
 	<body>
 		<div class="container">
