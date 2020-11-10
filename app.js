@@ -46,7 +46,7 @@ const connectServer = (serverConfig) => {
 				if (!serverConnections[host]) {
 					serverConnections[host] = [];
 				}
-				serverConnections[host][port] = {rcon: rcon, log: ["Connected to the server!"]};
+				serverConnections[host][port] = {rcon: rcon, log: ["Connected to the server!\n"]};
 				resolve(serverConnections[host][port]);
 			}).catch((error) => {
 				reject(`Could not connect to ${host}:${port}: ${error}`);
@@ -227,13 +227,13 @@ app.post("/dashboard/command", requireAuth, requireServer, (req, res, next) => {
 
 	if (command) {
 		console.log(`Executing RCON '${command}'...`);
-		req.server.rcon.send(command)
-			.then((response) => {
-				res.json(response);
-			})
-			.catch((error) => {
-				res.status(500).json(error);
-			});
+		req.server.log.push(command + "\n");
+		req.server.rcon.send(command).then((response) => {
+			req.server.log.push(response);
+			res.json(response);
+		}).catch((error) => {
+			res.status(500).json(error);
+		});
 	} else {
 		res.status(400).json("Invalid command!\n");
 	}

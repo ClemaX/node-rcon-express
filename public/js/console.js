@@ -3,8 +3,13 @@ const commandUrl = "/dashboard/command";
 window.addEventListener("load", function() {
 	const commandForm = document.getElementById("console-input");
 	const dataNode = document.getElementById("console-data");
+	const data = dataNode.textContent.replaceColorCodes();
+
+	dataNode.innerHTML = "";
+	dataNode.appendChild(data);
 
 	dataNode.scrollTop = dataNode.scrollHeight;
+
 	function sendCommand(command) {
 		fetch(commandUrl, {
 			method: "POST",
