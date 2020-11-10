@@ -200,15 +200,15 @@ app.post("/login", (req, res) => {
 	}
 });
 
-// Logout route
-app.post("/logout", requireAuth, (req, res, next) => {
+// Logout route TODO: should be post
+app.get("/logout", requireAuth, (req, res, next) => {
 	// Disconnect RCON
 	disconnectServer(req.user.servers[0]);
 
 	// Invalidate authentication token
 	delete authTokens[req.authToken];
 	res.clearCookie("AuthToken");
-	res.json("Logged out successfully!");
+	res.redirect("/login");
 });
 
 // Dashboard route
