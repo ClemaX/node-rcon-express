@@ -28,25 +28,46 @@ const RCON = require('./node-rcon/RCON');
 const serverConnections = [[{}]];
 
 const connectServer = (serverConfig) => {
+	const host = serverConfig.host;
+	const port = serverConfig.port;
+	const password = serverConfig.password;
+	const timeout = serverConfig.timeout;
+
 	// Connect to RCON server
 	return new Promise((resolve, reject) => {
-		if (serverConnections[host][port]) {
-			console.log(`Recycling RCON on ${serverConfig.host}:${serverConfig.port}`);
+		if (!serverConfig) {
+			reject("Invalid serverConfig!");
+		} else if (serverConnections[host] && serverConnections[host][port]) {
 			resolve(serverConnections[host][port]);
 		} else {
-			const rcon = new RCON(config.RCON.timeout)
-			connection.connect(serverConfig.host, serverConfig.port, serverConfig.password)
-			.then(() => {
-				console.log(`Connected to RCON on ${serverConfig.host}:${serverConfig.port}`);
-				serverConnections[host][port] = {rcon: rcon, log: 'Connected to the server!'};
+			const rcon = new RCON(timeout);
+
+			rcon.connect(host, port, password).then(() => {
+				if (!serverConnections[host]) {
+					serverConnections[host] = [];
+				}
+				serverConnections[host][port] = {rcon: rcon, log: ['Connected to the server!']};
 				resolve(serverConnections[host][port]);
-			})
-			.catch((error) => {
-				console.error(`Could not connect to ${serverConfig.host}:${serverConfig.port}: ${error}`);
-				reject(error);
+			}).catch((error) => {
+				reject(`Could not connect to ${host}:${port}: ${error}`);
 			});
 		}
 	});
+};
+
+const disconnectServer = (serverConfig) => {
+	const host = serverConfig.host;
+	const port = serverConfig.port;
+
+	console.log(`Disconnecting RCON on ${host}:${port}!`);
+	if (!serverConnections[host] || !serverConnections[host][port]){
+		return ("Invalid serverConfig!");
+	}
+	serverConnections[host][port].rcon.drain();
+	serverConnections[host][port].rcon.end();
+
+	delete serverConnections[host][port];
+	console.log(`Deleted connection to ${host}:${port}!`);
 };
 
 // Default user
@@ -58,6 +79,7 @@ db.defaults({
 		{
 			username: config.defaultUser.username,
 			password: hashedDefaultPassword,
+			servers: config.defaultUser.servers
 		}
 	]
 }).write();
@@ -98,6 +120,21 @@ const requireAuth = (req, res, next) => {
 		next();
 	} else {
 		res.redirect('/login');
+	}
+}
+
+const requireServer = (req, res, next) => {
+	if (!req.user.servers[0]) {
+		res.status(500).json("Internal Server Error");
+	} else {
+		connectServer(req.user.servers[0]).then((server) => {
+			req.server = server;
+			next();
+		}).catch((error) => {
+			console.error(`requireServer: Error connecting to server: ${error}`);
+			req.server = null;
+			res.status(500).json("Internal Server Error");
+		});
 	}
 }
 
@@ -171,25 +208,30 @@ app.post("/logout", requireAuth, (req, res, next) => {
 });
 
 // Dashboard route
-app.get('/dashboard', requireAuth, (req, res, next) => {
-	res.render('dashboard', {css: ['dashboard.css']});
+app.get('/dashboard', requireAuth, requireServer, (req, res, next) => {
+	connectServer(req.user.servers[0]).then((server) => {
+		res.render('dashboard', {css: ['dashboard.css'], js: ['console.js'], log: server.log});
+	}).catch((error) => {
+		console.error(error);
+		res.render('dashboard', {css: ['dashboard.css'], log: ["Error: Could not connect to server!"]});
+	});
 });
 
 // Command route
-app.post("/dashboard/command", requireAuth, (req, res, next) => {
+app.post("/dashboard/command", requireAuth, requireServer, (req, res, next) => {
 	const { command } = req.body;
+
 	if (command) {
 		console.log(`Executing RCON '${command}'...`);
-		rcon.send(command)
+		req.server.rcon.send(command)
 			.then((response) => {
-				console.log(`Result of command: ${response}`);
 				res.json(response);
 			})
 			.catch((error) => {
 				res.status(500).json(error);
 			});
 	} else {
-		res.status(401).json("Invalid command!");
+		res.status(400).json("Invalid command!\n");
 	}
 });
 

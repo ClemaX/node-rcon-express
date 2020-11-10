@@ -50,7 +50,10 @@ body {
 	color:whitesmoke;
 }
 
-.console-container p {
+#console-data {
+	overflow: scroll;
+	-ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 	font-size: 14px;
 	width: 90%;
 	margin-left: 5%;
@@ -58,6 +61,11 @@ body {
 	border: 9px solid rgb(27, 25, 32);
 	background-color: rgb(22, 19, 26);
 	color: whitesmoke;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#console-data::-webkit-scrollbar {
+	display: none;
 }
 
 #console-input {

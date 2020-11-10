@@ -12,6 +12,9 @@
 	<body>
 		<div class="container">
 			{{{body}}}
+			{{#each js}}
+				<script src="/static/js/{{this}}"></script>
+			{{/each}}
 		</div>
 	</body>
 </html>

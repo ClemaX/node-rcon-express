@@ -4,8 +4,16 @@
 
 <div class="console-container">
 	<h1>Console</h1>
-	<p>$> echo Hello World !<br>ERROR: SEGF on adress 0x777fdsfds89f by 0x777dsad999da</p>
-		<form method="POST" action="/dashboard/command" enctype="application/x-www-form-urlencoded" id="console-input">
+
+	<p id="console-data">
+		{{#each log}}
+			{{this}}<br>
+    {{/each}}
+	</p>
+
+	<form id="console-input">
 		<h5>$></h5>
-		<input type="text">
+		<input type="text" name="command" id="command">
+	</form>
+
 </div>
