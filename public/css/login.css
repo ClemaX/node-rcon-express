@@ -9,6 +9,9 @@ body {
 
 	/*background-color: rgb(77, 179, 238);*/
 	background-image: url("/static/img/bg.png");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
 
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -50,7 +53,7 @@ body {
 	width: 100%;
 }
 
-.login-container input[type="submit"]:hover {
+.login-container button[type="submit"]:hover {
 	background-color: var(--login-submit-btn-hover-color);
 	border-color: var(--login-submit-btn-hover-color);
 	-webkit-box-shadow: 0px 4px 0px 0px var(--login-submit-btn-shadow-hover-color);
@@ -60,7 +63,7 @@ body {
 	transition: 0.2s ease-in;
 }
 
-.login-container input[type="submit"] {
+.login-container button[type="submit"] {
 	font-size: large;
 	font-weight: bold;
 	text-decoration: none;

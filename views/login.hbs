@@ -1,11 +1,13 @@
-<form method="POST" action="/login" enctype="application/x-www-form-urlencoded" class="login-container" id="form">
+<div class="login-container">
 	<h1>Login to Minecraft web console</h1>
-	<h4>Username: </h4>
-	<input type="text" name="username" id="username">
-	<h4>Password: </h4>
-	<input type="password" name="password" id="password">
-	{{#if message}}
-		<h5>{{message}}</h5>
-	{{/if}}
-	<button type="submit">Login</button>
-</form>
+	<form method="POST" action="/login" enctype="application/x-www-form-urlencoded" id="form">
+		<label for="username">Username: </label>
+		<input type="text" name="username" id="username">
+		<label for="password">Password: </label>
+		<input type="password" name="password" id="password">
+		{{#if message}}
+			<h5>{{message}}</h5>
+		{{/if}}
+		<button type="submit">Login</button>
+	</form>
+</div>

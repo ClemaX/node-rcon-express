@@ -1,14 +1,34 @@
 <div class="title-container">
+	<img src="static/img/cube.png">
 	<h1>Minecraft Web Server Interface</h1>
+	<h4>
+		Welcome {{username}}!<br>
+		This is the place where you will manage your server,
+		take care of what you are doing in here.
+	</h4>
+</div>
+
+<div class="server-container">
+	<div>
+		<h1>{{server.externalHost}} (<strong>{{server.externalIp}}</strong>)</h1>
+		<h4>Status : <strong>Running</strong></h4>
+		<h4>Players : {{server.players.online}}/{{server.players.max}}</h4>
+		<h4>Version: {{server.version}}</h4>
+	</div>
+	<aside class="server-action-container">
+		<input type="button" value="Reload" class="server-action-button">
+		<input type="button" value="Restart" class="server-action-button">
+		<input type="button" value="Stop" class="server-action-button">
+	</aside>
 </div>
 
 <div class="console-container">
 	<h1>Console</h1>
 
-	<p id="console-data">{{#each log}}{{this}}{{/each}}</p>
+	<p id="console-data">{{#each server.log}}{{this}}{{/each}}</p>
 
 	<form id="console-input">
-		<h5>$></h5>
+		<label for="command">$></label>
 		<input type="text" name="command" id="command">
 	</form>
 

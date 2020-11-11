@@ -7,10 +7,12 @@
 		"password": "drowssap",
 		"servers": [
 			{
-				"host": "localhost",
+				"externalHost": "ludrak.chamada.dev",
+				"internalHost": "localhost",
 				"port": 25575,
 				"password": "drowssap",
-				"timeout": 3000
+				"timeout": 3000,
+				"version": "1.16.3"
 			}
 		]
 	},

@@ -17,6 +17,10 @@ body {
 	--server-action-btn-stop-hover: rgb(241, 216, 216);
 	--server-action-btn-text: rgb(3, 3, 3);
 
+	--console-background-color: rgb(35, 33, 39);
+	--console-border-color: rgb(27, 25, 32);
+	--console-data-background-color: rgb(22, 19, 26);
+
 	/** Login page */
 	--login-h1-color: rgb(99, 104, 90);
 	--login-h4-color: rgb(216, 163, 103);

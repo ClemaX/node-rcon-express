@@ -1,13 +1,26 @@
 body {
+	--container-padding: 3vw;
+	--container-border-radius: 20px;
+	--button-border-radius: 5px;
+
+	--container-vertical-spacing: calc(-1 * var(--container-padding));
+
+	--console-data-border-size: 9px;
+
+	/*
 	position: absolute;
 	top:0px;
 	left:0px;
 	margin:0 0;
 	padding:0 0;
+
 	width: 100vw;
-	height: 100vh;
+	height: 100vh; */
 
 	background-image: url("/static/img/bg-server.png");
+  background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
 
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -16,41 +29,21 @@ body {
 **  Title container
 */
 
-.title-container img {
-	position: absolute;
-
-	display: block;
-	width: 250px;
-	height: 250px;
-	margin-left: 80%;
-	top: -100px;
-}
-
-.title-container h1 {
-	font-size: 50px;
-	color: var(--title-h1-color);
-	width: 75%;
-}
-
-.title-container h4 {
-	font-size: 26px;
-	color: var(--title-h4-color);
-	width: 75%;
-}
-
 .title-container {
 	z-index: 0;
-	position: absolute;
+	position: relative;
 
 	background-color: var(--title-background-color);
-	border: 50px solid var(--title-background-color);
-	border-radius: 20px;
+
+
+	border-radius: var(--container-border-radius);
 
 	width:75%;
-	height:200px;
+/*	height: 200px; Cannot hardcode height in dynamic layout*/
 
-	margin-left:10%;
-	margin-top:5%;
+	padding: var(--container-padding);
+	margin-left: 10%;
+	margin-top: 5%;
 
 	top: 0px;
 
@@ -61,10 +54,60 @@ body {
 	top: -20px;
 }
 
+.title-container img {
+	position: absolute;
+	z-index: 1;
+
+	max-width: 200px;
+	width: 100%;
+
+	top: var(--container-vertical-spacing);
+	right: var(--container-padding);
+}
+
+.title-container h1 {
+	font-size: 50px;
+	color: var(--title-h1-color);
+	width: 80%;
+}
+
+.title-container h4 {
+	font-size: 26px;
+	color: var(--title-h4-color);
+	width: 100%;
+}
 
 /*
 **  Server container
 */
+
+.server-container {
+	position: relative;
+	z-index: 1;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	background-color: var(--server-background-color);
+	border-radius: var(--container-border-radius);
+
+	padding: var(--container-padding);
+
+	width:75%;
+/*	height:90px; Cannot hardcode height in dynamic layout*/
+
+	margin-left: 15%;
+	margin-top: var(--container-vertical-spacing);
+/*	top: 360px; */
+
+	transition: 0.5s ease-in-out;
+}
+
+.server-container:hover {
+	margin-left: calc(15% - 35px);
+}
+
 
 .server-container strong {
 	color: rgb(0, 255, 64);
@@ -83,31 +126,6 @@ body {
 	margin: 0;
 	margin-left: 20px;
 	color: var(--server-h4-color);
-}
-
-.server-container {
-	z-index: 1;
-
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	position: absolute;
-
-	background-color: var(--server-background-color);
-	border: 50px solid var(--server-background-color);
-	border-radius: 20px;
-
-	width:75%;
-	height:90px;
-
-	margin-left: 15%;
-	top: 360px;
-
-	transition: 0.5s ease-in-out;
-}
-
-.server-container:hover {
-	margin-left: calc(15% - 35px);
 }
 
 /*
@@ -131,7 +149,7 @@ body {
 	background-color: gray;
 	color: var(--server-action-btn-text);
 	border: 5px solid inherit;
-	border-radius: 5px;
+	border-radius: var(--button-border-radius);
 	transition: 0.6s ease-in-out;
 }
 
@@ -165,6 +183,31 @@ body {
 **  Console Container
 */
 
+.console-container {
+	z-index: 0;
+	position: relative;
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--console-background-color);
+	border-radius: var(--container-border-radius);
+
+	padding: var(--container-padding);
+
+	width:75%;
+	height: 75vh;
+
+	margin-left: 5%;
+	margin-top: var(--container-vertical-spacing);
+
+	transition: 0.5s ease-in-out;
+}
+
+.console-container:hover {
+	margin-left: calc(1% + 25px);
+}
+
 .console-container h1 {
 	font-size: 38px;
 	color:whitesmoke;
@@ -173,14 +216,14 @@ body {
 #console-data {
 	overflow: scroll;
 	-ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+	scrollbar-width: none;  /* Firefox */
+
+	flex: auto;
 	font-size: 14px;
-	width: 90%;
-	margin-left: 5%;
-	height: 75%;
-	border: 9px solid rgb(27, 25, 32);
-	background-color: rgb(22, 19, 26);
 	color: whitesmoke;
+
+	border: var(--console-data-border-size) solid var(--console-border-color);
+	background-color: var(--console-data-background-color);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -188,49 +231,28 @@ body {
 	display: none;
 }
 
+/*
+**  Console Text
+**	TODO: Style for every minecraft text style (colors and format)
+*/
+
 #console-input {
 	display: flex;
 	flex-direction: row;
-	width: 90%;
-	margin-left: 5%;
-	margin-bottom: 50px;
-	margin-top:0px;
-	padding:7px;
-	background-color: rgb(27, 25, 32);
+	border: var(--console-data-border-size) solid var(--console-border-color);
+	background-color: var(--console-border-color);
 }
 
-#console-input h5 {
-	margin: 0;
-	width: 20px;
+#console-input label[for="command"] {
+	padding-right: var(--console-data-border-size);
 	color: whitesmoke;
 }
 
 #console-input input {
 	position: relative;
 	border: none;
-	background-color: rgb(22, 19, 26);
-	width:100%;
-	float:right;
+	background-color: var(--console-data-background-color);
+	width: 100%;
+	float: right;
 	color: whitesmoke;
-}
-
-.console-container {
-	z-index: 0;
-	position: absolute;
-
-	background-color: rgb(35, 33, 39);
-	border: 50px solid rgb(35, 33, 39);
-	border-radius: 20px;
-
-	width:75%;
-	height:500px;
-
-	margin-left: 5%;
-	top: 520px;
-
-	transition: 0.5s ease-in-out;
-}
-
-.console-container:hover {
-	margin-left: calc(1% + 25px);
 }

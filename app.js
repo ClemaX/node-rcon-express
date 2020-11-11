@@ -27,8 +27,10 @@ const RCON = require("./node-rcon/RCON");
 
 const serverConnections = [[{}]];
 
+const listRegExp = /There are (?<online>\d+) of a max of (?<max>\d+) players online:/;
+
 const connectServer = (serverConfig) => {
-	const host = serverConfig.host;
+	const host = serverConfig.internalHost;
 	const port = serverConfig.port;
 	const password = serverConfig.password;
 	const timeout = serverConfig.timeout;
@@ -42,25 +44,44 @@ const connectServer = (serverConfig) => {
 		} else {
 			const rcon = new RCON(timeout);
 
-			rcon.connect(host, port, password).then(() => {
+			rcon.connect(host, port, password).then(() =>
+				rcon.send("list")
+			).then((listResult) => {
+				const { groups: players } = listResult.match(listRegExp);
+
+				if (!players.online || !players.max) {
+					reject("Could not list server users!\n");
+				}
+				const server = {
+					externalHost: serverConfig.internalHost,
+					externalIp: "TODO",
+					version: serverConfig.version,
+					running: true,
+					players: players,
+					rcon: rcon,
+					log: ["Connected to the server!\n"]
+				};
+
 				if (!serverConnections[host]) {
 					serverConnections[host] = [];
 				}
-				serverConnections[host][port] = {rcon: rcon, log: ["Connected to the server!\n"]};
+
+				serverConnections[host][port] = server;
+
 				resolve(serverConnections[host][port]);
 			}).catch((error) => {
-				reject(`Could not connect to ${host}:${port}: ${error}`);
+				reject(`Could not connect to ${host}:${port}: ${error}\n`);
 			});
 		}
 	});
 };
 
 const disconnectServer = (serverConfig) => {
-	const host = serverConfig.host;
+	const host = serverConfig.internalHost;
 	const port = serverConfig.port;
 
 	console.log(`Disconnecting RCON on ${host}:${port}!`);
-	if (!serverConnections[host] || !serverConnections[host][port]){
+	if (!serverConnections[host] || !serverConnections[host][port]) {
 		return ("Invalid serverConfig!");
 	}
 	serverConnections[host][port].rcon.drain();
@@ -184,7 +205,7 @@ app.post("/login", (req, res) => {
 		// Compare password with hashed password
 		bcrypt.compare(password, user.password)
 			.then((result) => {
-				if (result){
+				if (result) {
 					res.cookie("AuthToken", authToken);
 					res.redirect("/dashboard");
 				} else {
@@ -214,10 +235,14 @@ app.get("/logout", requireAuth, (req, res, next) => {
 // Dashboard route
 app.get("/dashboard", requireAuth, requireServer, (req, res, next) => {
 	connectServer(req.user.servers[0]).then((server) => {
-		res.render("dashboard", {css: ["dashboard.css"], js: ["console.js"], log: server.log});
+		res.render("dashboard", {
+			css: ["dashboard.css"],
+			js: ["colors.js", "console.js"],
+			server: server
+		});
 	}).catch((error) => {
 		console.error(error);
-		res.render("dashboard", {css: ["dashboard.css"], log: ["Error: Could not connect to server!"]});
+		res.render("dashboard", { css: ["dashboard.css"], server: {running: false, players: {online: 0, max: 0}}, log: ["Could not connect to server!\n"]});
 	});
 });
 
@@ -226,7 +251,6 @@ app.post("/dashboard/command", requireAuth, requireServer, (req, res, next) => {
 	const { command } = req.body;
 
 	if (command) {
-		console.log(`Executing RCON '${command}'...`);
 		req.server.log.push(command + "\n");
 		req.server.rcon.send(command).then((response) => {
 			req.server.log.push(response);
