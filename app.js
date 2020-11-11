@@ -53,7 +53,7 @@ const connectServer = (serverConfig) => {
 					reject("Could not list server users!\n");
 				}
 				const server = {
-					externalHost: serverConfig.internalHost,
+					externalHost: serverConfig.externalHost,
 					externalIp: "TODO",
 					version: serverConfig.version,
 					running: true,
@@ -242,7 +242,14 @@ app.get("/dashboard", requireAuth, requireServer, (req, res, next) => {
 		});
 	}).catch((error) => {
 		console.error(error);
-		res.render("dashboard", { css: ["dashboard.css"], server: {running: false, players: {online: 0, max: 0}}, log: ["Could not connect to server!\n"]});
+		res.render("dashboard", {
+			css: ["dashboard.css"],
+			server: {
+				running: false,
+				players: { online: 0, max: 0}
+			},
+			log: ["Could not connect to server!\n"]
+		});
 	});
 });
 
@@ -254,8 +261,10 @@ app.post("/dashboard/command", requireAuth, requireServer, (req, res, next) => {
 		req.server.log.push(command + "\n");
 		req.server.rcon.send(command).then((response) => {
 			req.server.log.push(response);
+			console.log(response);
 			res.json(response);
 		}).catch((error) => {
+			console.error(error);
 			res.status(500).json(error);
 		});
 	} else {
